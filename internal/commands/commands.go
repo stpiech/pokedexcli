@@ -1,5 +1,4 @@
 package commands
-
 import (
   "github.com/stpiech/pokedexcli/internal/commands/definitions"
   "github.com/stpiech/pokedexcli/internal/commands/callbacks"
@@ -28,7 +27,9 @@ func Commands() map[string]Command {
 func callbacksMap() map[string]func() {
   return map[string]func() {
     "exit": callbacks.ExitCallback,
-    "help": callbacks.HelpCallback,
+    "help": callbacks.HelpCallback, 
+    "map": callbacks.MapCallback,
+    "mapr": callbacks.MaprCallback,
   }
 
 }

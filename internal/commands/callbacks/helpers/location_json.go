@@ -1,0 +1,56 @@
+package helpers
+
+import (
+	"encoding/json"
+	"fmt"
+	"net/http"
+)
+
+type FetchedLocations struct {
+	Count    int    `json:"count"`
+	Next     string `json:"next"`
+	Previous string `json:"previous"`
+	Results  []struct {
+		Name string `json:"name"`
+		URL  string `json:"url"`
+	} `json:"results"`
+}
+
+var page int = -1
+
+func LocationsJson(forward bool) (FetchedLocations, error) {
+  controllPage(forward)
+  res, err := http.Get(locationsUrl())
+  fmt.Println(locationsUrl(), page, forward) 
+  if err != nil {
+    return FetchedLocations{}, err 
+  }
+  defer res.Body.Close()
+
+  decoder := json.NewDecoder(res.Body)
+  var data FetchedLocations 
+  err = decoder.Decode(&data)
+  if err != nil {
+    return FetchedLocations{}, err
+  }
+
+  return data, nil
+}
+
+func locationsUrl() string {
+  baseUrl := "https://pokeapi.co/api/v2/location-area"  
+  if page > 0 {
+    return fmt.Sprintf("%s?offset=%d&limit=20", baseUrl, page * 20)
+  }
+  return baseUrl 
+}
+
+func controllPage(forward bool) {
+  if forward == true {
+    page++
+  } else {
+    if page != 0 {
+      page--
+    }
+  }
+}

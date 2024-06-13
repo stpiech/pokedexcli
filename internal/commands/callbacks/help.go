@@ -11,7 +11,7 @@ func HelpCallback() {
 
   for _, v := range definitions.CommandsDefinition() {
     fmt.Printf("\n> %s\n", v.Name)
-    fmt.Println("  Description: ", v.Description)
+    fmt.Println("  Description:", v.Description)
   }
   fmt.Println()
 }
