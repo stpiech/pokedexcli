@@ -4,36 +4,35 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"time"
+	"github.com/stpiech/pokedexcli/internal/pokecache"
+  "github.com/stpiech/pokedexcli/internal/commontypes"
 )
 
-type FetchedLocations struct {
-	Count    int    `json:"count"`
-	Next     string `json:"next"`
-	Previous string `json:"previous"`
-	Results  []struct {
-		Name string `json:"name"`
-		URL  string `json:"url"`
-	} `json:"results"`
-}
-
 var page int = -1
+var cache *pokecache.Cache = pokecache.NewCache(10 * time.Second)
 
-func LocationsJson(forward bool) (FetchedLocations, error) {
+func LocationsJson(forward bool) (commontypes.FetchedLocations, error) {
   controllPage(forward)
+ 
+  cacheObj, err := cache.Get(locationsUrl())
+  if err == nil {
+    return cacheObj, nil
+  }
+
   res, err := http.Get(locationsUrl())
-  fmt.Println(locationsUrl(), page, forward) 
   if err != nil {
-    return FetchedLocations{}, err 
+    return commontypes.FetchedLocations{}, err 
   }
   defer res.Body.Close()
 
   decoder := json.NewDecoder(res.Body)
-  var data FetchedLocations 
+  var data commontypes.FetchedLocations 
   err = decoder.Decode(&data)
   if err != nil {
-    return FetchedLocations{}, err
+    return commontypes.FetchedLocations{}, err
   }
-
+  cache.Add(locationsUrl(), data)
   return data, nil
 }
 
