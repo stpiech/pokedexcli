@@ -32,11 +32,14 @@ func callbacksMap() map[string]func() {
     "help": callbacks.HelpCallback, 
     "map": callbacks.MapCallback,
     "mapr": callbacks.MaprCallback,
+    "pokedex": callbacks.PokedexCallback,
   }
 }
 
 func argCallbacksMap() map[string]func([]string) {
   return map[string]func([]string) {
     "explore": callbacks.ExploreCallback,
+    "catch": callbacks.CatchCallback,
+    "inspect": callbacks.InspectCallback,
   }
 }

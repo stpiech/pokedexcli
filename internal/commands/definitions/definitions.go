@@ -23,6 +23,18 @@ func CommandsDefinition() map[string]CommandDefinition {
       Name: "explore",
       Description: "Explores location and show its Pokemons. Usage: explore <area_name>",
     },
+    "catch": {
+      Name: "catch",
+      Description: "Tries to catch a pokemon. Usage: explore <pokemon_name>",
+    },
+    "inspect": {
+      Name: "inspect",
+      Description: "Inspects already caught pokemon",
+    },
+    "pokedex": {
+      Name: "pokedex",
+      Description: "Shows your Pokedex",
+    },
     "exit": {
       Name: "exit",
       Description: "Exits the program",
