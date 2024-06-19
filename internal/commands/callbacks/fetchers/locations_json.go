@@ -1,38 +1,43 @@
-package helpers
+package fetchers
 
 import (
 	"encoding/json"
 	"fmt"
 	"net/http"
 	"time"
+
 	"github.com/stpiech/pokedexcli/internal/pokecache"
-  "github.com/stpiech/pokedexcli/internal/commontypes"
 )
 
-var page int = -1
-var cache *pokecache.Cache = pokecache.NewCache(10 * time.Second)
+type FetchedLocations struct {
+	Count    int    `json:"count"`
+	Next     string `json:"next"`
+	Previous string `json:"previous"`
+	Results  []struct {
+		Name string `json:"name"`
+		URL  string `json:"url"`
+	} `json:"results"`
+}
 
-func LocationsJson(forward bool) (commontypes.FetchedLocations, error) {
+var page int = -1
+var cacheData = pokecache.NewCache(5 * time.Second)
+
+func LocationsJson(forward bool) (FetchedLocations, error) {
   controllPage(forward)
- 
-  cacheObj, err := cache.Get(locationsUrl())
-  if err == nil {
-    return cacheObj, nil
-  }
 
   res, err := http.Get(locationsUrl())
   if err != nil {
-    return commontypes.FetchedLocations{}, err 
+    return FetchedLocations{}, err 
   }
   defer res.Body.Close()
 
   decoder := json.NewDecoder(res.Body)
-  var data commontypes.FetchedLocations 
+  var data FetchedLocations 
   err = decoder.Decode(&data)
   if err != nil {
-    return commontypes.FetchedLocations{}, err
+    return FetchedLocations{}, err
   }
-  cache.Add(locationsUrl(), data)
+
   return data, nil
 }
 

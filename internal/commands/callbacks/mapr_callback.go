@@ -2,14 +2,14 @@ package callbacks
 
 import (
   "fmt"
-  "github.com/stpiech/pokedexcli/internal/commands/callbacks/helpers"
+  "github.com/stpiech/pokedexcli/internal/commands/callbacks/fetchers"
 )
 
 
 func MaprCallback() {
-  jsonLocations, err := helpers.LocationsJson(false)
+  jsonLocations, err := fetchers.LocationsJson(false)
   if err != nil {
-    fmt.Println("Couldn't fetch locations. Try later")
+    fmt.Println(err)
     return
   }
   for _, v := range jsonLocations.Results {

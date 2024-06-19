@@ -19,6 +19,10 @@ func CommandsDefinition() map[string]CommandDefinition {
       Name: "mapr",
       Description: "Shows previous 20 locations. If no locations were initialized, initializes them.",
     },
+    "explore": {
+      Name: "explore",
+      Description: "Explores location and show its Pokemons. Usage: explore <area_name>",
+    },
     "exit": {
       Name: "exit",
       Description: "Exits the program",

@@ -7,7 +7,8 @@ import (
 type Command struct {
   Name string
   Description string
-  Callback func() 
+  Callback func()
+  ArgCallback func([]string)
 }
 
 func Commands() map[string]Command {
@@ -16,6 +17,7 @@ func Commands() map[string]Command {
   for k, v := range definitions.CommandsDefinition() { 
     var value Command
     value.Callback = callbacksMap()[k]
+    value.ArgCallback = argCallbacksMap()[k]
     value.Name = v.Name
     value.Description = v.Description
     definitionsWithCallback[k] = value
@@ -31,5 +33,10 @@ func callbacksMap() map[string]func() {
     "map": callbacks.MapCallback,
     "mapr": callbacks.MaprCallback,
   }
+}
 
+func argCallbacksMap() map[string]func([]string) {
+  return map[string]func([]string) {
+    "explore": callbacks.ExploreCallback,
+  }
 }

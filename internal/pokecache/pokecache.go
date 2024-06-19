@@ -1,15 +1,15 @@
 package pokecache
 
 import (
+	"encoding/json"
 	"errors"
 	"sync"
 	"time"
-  "github.com/stpiech/pokedexcli/internal/commontypes"
 )
 
 type cacheEntry struct {
   createdAt time.Time
-  value commontypes.FetchedLocations 
+  value *json.Decoder 
 }
 
 type Cache struct {
@@ -25,7 +25,7 @@ func NewCache(interval time.Duration) *Cache {
   return &cachedData
 }
 
-func (cachedData *Cache) Add(key string, value commontypes.FetchedLocations) {
+func (cachedData *Cache) Add(key string, value *json.Decoder) {
   cachedData.mu.Lock()
   defer cachedData.mu.Unlock()
 
@@ -33,13 +33,13 @@ func (cachedData *Cache) Add(key string, value commontypes.FetchedLocations) {
 }
 
 
-func (cachedData *Cache) Get(key string) (commontypes.FetchedLocations, error) {
+func (cachedData *Cache) Get(key string) (*json.Decoder, error) {
   cachedData.mu.Lock()
   defer cachedData.mu.Unlock()
 
   val, ok := cachedData.values[key]
   if !ok {
-    return commontypes.FetchedLocations{}, errors.New("Not found in cache")
+    return nil, errors.New("Not found in cache")
   }
 
   return val.value, nil
