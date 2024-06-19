@@ -4,9 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"time"
-
-	"github.com/stpiech/pokedexcli/internal/pokecache"
 )
 
 type FetchedLocations struct {
@@ -20,7 +17,6 @@ type FetchedLocations struct {
 }
 
 var page int = -1
-var cacheData = pokecache.NewCache(5 * time.Second)
 
 func LocationsJson(forward bool) (FetchedLocations, error) {
   controllPage(forward)
